@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Stock Service</title>
+
+   <script src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js" id="sap-ui-bootstrap"
+      data-sap-ui-theme="sap_belize" data-sap-ui-libs="sap.m,sap.ui.layout" data-sap-ui-compatVersion="edge"
+      data-sap-ui-resourceroots='{
+     "stockapp": "./"
+  }' data-sap-ui-async="true">
+   </script>
+
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   <script src="controller/Stock.controller.js"></script>
+</head>
+
+<body class="sapUiBody">
+   <div id="content"></div>
+
+   <script>
+      sap.ui.getCore().attachInit(function () {
+         var oTable = new sap.m.Table("stockTable", {
+            columns: [
+               new sap.m.Column({ header: new sap.m.Label({ text: "Select" }) }),
+               new sap.m.Column({ header: new sap.m.Label({ text: "Product Quantity" }) }),
+               new sap.m.Column({ header: new sap.m.Label({ text: "Product Code" }) }),
+               new sap.m.Column({ header: new sap.m.Label({ text: "Location" }) }),
+               new sap.m.Column({ header: new sap.m.Label({ text: "Zip Code" }) })
+            ]
+         });
+
+         var oTemplate = new sap.m.ColumnListItem({
+            cells: [
+               new sap.m.CheckBox(),
+               new sap.m.Text({ text: "{productQuantity}" }),
+               new sap.m.Text({ text: "{productCode}" }),
+               new sap.m.Text({ text: "{location}" }),
+               new sap.m.Text({ text: "{zipCode}" })
+            ]
+         });
+
+         var oModel = new sap.ui.model.json.JSONModel();
+
+         jQuery.ajax({
+            url: "http://localhost:8083/api/v2/stock",
+            method: "GET",
+            success: function (data) {
+               oModel.setData({
+                  "data": data
+               });
+
+               oTable.setModel(oModel);
+               oTable.bindAggregation("items", "/data", oTemplate);
+            },
+            error: function (error) {
+               console.error("Error loading data:", error);
+            }
+         });
+
+         oTable.placeAt("content");
+
+         var oFlexBox = new sap.m.FlexBox({
+            justifyContent: sap.m.FlexJustifyContent.End,
+            items: [
+               oTable,
+               new sap.m.Button({
+                  text: "Create Form",
+                  press: function () {
+                     var oFormDialog = new sap.m.Dialog({
+                        title: "Stock Form",
+                        content: new sap.ui.layout.form.SimpleForm({
+                           layout: sap.ui.layout.form.SimpleFormLayout.ResponsiveGridLayout,
+                           content: [
+                              new sap.m.Label({ text: "Product Quantity" }),
+                              new sap.m.Input({ value: "", placeholder: "Enter Product Quantity" }),
+
+                              new sap.m.Label({ text: "Product Code" }),
+                              new sap.m.Input({ value: "", placeholder: "Enter Product Code" }),
+
+                              new sap.m.Label({ text: "Location" }),
+                              new sap.m.Input({ value: "", placeholder: "Enter Location" }),
+
+                              new sap.m.Label({ text: "Zip Code" }),
+                              new sap.m.Input({ value: "", placeholder: "Enter Zip Code" }),
+                           ]
+                        }),
+                        beginButton: new sap.m.Button({
+                           text: "Submit",
+                           press: function () {
+                              var formData = {
+                                 productQuantity: parseFloat(oFormDialog.getContent()[0].getContent()[1].getValue()),
+                                 productCode: oFormDialog.getContent()[0].getContent()[3].getValue(),
+                                 location: oFormDialog.getContent()[0].getContent()[5].getValue(),
+                                 zipCode: oFormDialog.getContent()[0].getContent()[7].getValue()
+                              };
+
+                              jQuery.ajax({
+                                 url: "http://localhost:8083/api/v2/stock",
+                                 method: "POST",
+                                 contentType: "application/json",
+                                 data: JSON.stringify(formData),
+                                 success: function (response) {
+                                    console.log("Data added successfully:", response);
+                                    oModel.refresh();
+                                 },
+                                 error: function (error) {
+                                    console.error("Error adding data:", error);
+                                 }
+                              });
+
+                              oFormDialog.close();
+                           }
+                        }),
+                        endButton: new sap.m.Button({
+                           text: "Cancel",
+                           press: function () {
+                              oFormDialog.close();
+                           }
+                        }),
+                        afterClose: function () {
+                           oFormDialog.destroy();
+                        }
+                     });
+
+                     oFormDialog.open();
+                  }
+               }),
+               new sap.m.Button({
+                  text: "Delete",
+                  press: function () {
+                     var aSelectedItems = oTable.getSelectedItems();
+                     if (aSelectedItems.length > 0) {
+                        aSelectedItems.forEach(function (oSelectedItem) {
+                           var oBindingContext = oSelectedItem.getBindingContext("dataModel");
+                           var sStockId = oBindingContext.getProperty("stockId");
+
+                           jQuery.ajax({
+                              url: "http://localhost:8083/api/v2/stock/" + sStockId,
+                              method: "DELETE",
+                              success: function (response) {
+                                 console.log("Data deleted successfully:", response);
+                                 oModel.refresh();
+                              },
+                              error: function (error) {
+                                 console.error("Error deleting data:", error);
+                              }
+                           });
+                        });
+                     } else {
+                        sap.m.MessageToast.show("Please select at least one item to delete");
+                     }
+                  }
+               })
+            ]
+         });
+
+         oFlexBox.placeAt("content");
+      });
+   </script>
+</body>
+
+</html>

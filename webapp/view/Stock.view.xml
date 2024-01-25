@@ -1,0 +1,51 @@
+<mvc:View
+   xmlns:mvc="sap.ui.core.mvc"
+   xmlns="sap.m"
+   controllerName="mycompany.myapp.MyWorklistApp.controller.Stock">
+
+   <Page
+      title="Stock List"
+      showNavButton="true"
+      navButtonPress="onNavBack">
+
+      <content>
+         <Table
+            id="stockTable"
+            items="{dataModel>/}">
+            <columns>
+               <Column>
+                  <Text text="Product Quantity" />
+               </Column>
+               <Column>
+                  <Text text="Product Code" />
+               </Column>
+               <Column>
+                  <Text text="Location" />
+               </Column>
+               <Column>
+                  <Text text="Zip Code" />
+               </Column>
+            </columns>
+            <items>
+               <ColumnListItem
+                  press="onStockItemPress">
+                  <cells>
+                     <Text text="{dataModel>productQuantity}" />
+                     <Text text="{dataModel>productCode}" />
+                     <Text text="{dataModel>location}" />
+                     <Text text="{dataModel>zipCode}" />
+                  </cells>
+               </ColumnListItem>
+            </items>
+         </Table>
+      </content>
+
+      <footer>
+         <OverflowToolbar>
+            <ToolbarSpacer />
+            <Button text="Delete" press="onDeleteStock" />
+         </OverflowToolbar>
+      </footer>
+
+   </Page>
+</mvc:View>
