@@ -1,131 +1,114 @@
 {
-	"_version": "1.21.0",
-
+	"_version": "1.58.0",
 	"sap.app": {
-		"id": "mycompany.myapp.MyWorklistApp",
-		"type": "application",
-		"i18n": {
-			"bundleUrl": "i18n/i18n.properties",
-			"supportedLocales": [
-				""
-			],
-			"fallbackLocale": ""
-		},
+		"id": "ui5.walkthrough",
+		"i18n": "i18n/i18n.properties",
 		"title": "{{appTitle}}",
 		"description": "{{appDescription}}",
+		"type": "application",
 		"applicationVersion": {
 			"version": "1.0.0"
 		},
-		"resources": "resources.json",
 		"dataSources": {
-			"mainService": {
-				"uri": "/northwind/V2/Northwind/Northwind.svc/",
+			"invoiceRemote": {
+				"uri": "V2/Northwind/Northwind.svc/",
 				"type": "OData",
 				"settings": {
-					"odataVersion": "2.0",
-					"localUri": "localService/metadata.xml"
+					"odataVersion": "2.0"
 				}
 			}
 		}
 	},
-
 	"sap.ui": {
 		"technology": "UI5",
-		"icons": {
-			"icon": "sap-icon://task",
-			"favIcon": "",
-			"phone": "",
-			"phone@2": "",
-			"tablet": "",
-			"tablet@2": ""
-		},
 		"deviceTypes": {
 			"desktop": true,
 			"tablet": true,
 			"phone": true
 		}
 	},
-
 	"sap.ui5": {
-		"rootView": {
-			"viewName": "mycompany.myapp.MyWorklistApp.view.App",
-			"type": "XML",
-			"async": true,
-			"id": "app"
-		},
 		"dependencies": {
-			"minUI5Version": "1.98.0",
+			"minUI5Version": "1.108.0",
 			"libs": {
-				"sap.f": {},
-				"sap.m": {},
-				"sap.ui.core": {}
+				"sap.ui.core": {},
+				"sap.m": {}
 			}
-		},
-		"contentDensities": {
-			"compact": true,
-			"cozy": true
 		},
 		"models": {
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
 				"settings": {
-					"bundleName": "mycompany.myapp.MyWorklistApp.i18n.i18n",
+					"bundleName": "ui5.walkthrough.i18n.i18n",
 					"supportedLocales": [
 						""
 					],
 					"fallbackLocale": ""
 				}
 			},
-			"": {
-				"dataSource": "mainService",
-				"preload": true
+			"invoice": {
+				"dataSource": "invoiceRemote"
 			}
+		},
+		"rootView": {
+			"viewName": "ui5.walkthrough.view.App",
+			"type": "XML",
+			"id": "app"
+		},
+		"resources": {
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
 		},
 		"routing": {
 			"config": {
 				"routerClass": "sap.m.routing.Router",
 				"type": "View",
 				"viewType": "XML",
-				"path": "mycompany.myapp.MyWorklistApp.view",
+				"path": "ui5.walkthrough.view",
 				"controlId": "app",
-				"controlAggregation": "pages",
-				"bypassed": {
-					"target": ["notFound"]
-				},
-				"async": true
+				"controlAggregation": "pages"
 			},
 			"routes": [
 				{
 					"pattern": "",
-					"name": "worklist",
-					"target": ["worklist"]
+					"name": "tile",
+					"target": "tile"
 				},
 				{
-					"pattern": "Products/{objectId}",
-					"name": "object",
-					"target": ["object"]
+					"pattern": "overview",
+					"name": "overview",
+					"target": "overview"
+				},
+				{
+					"pattern": "detail",
+					"name": "detail",
+					"target": "detail"
+				},
+				{
+					"pattern": "stockOverview",
+					"name": "stockOverview",
+					"target": "stockOverview"
 				}
 			],
 			"targets": {
-				"worklist": {
-					"name": "Worklist",
-					"id": "worklist",
-					"level": 1,
-					"title": "{i18n>worklistViewTitle}"
+				"tile": {
+					"id": "tile",
+					"name": "Tile"
 				},
-				"object": {
-					"name": "Object",
-					"id": "object",
-					"level": 2,
-					"title": "{i18n>objectViewTitle}"
+				"overview": {
+					"id": "overview",
+					"name": "Overview"
 				},
-				"objectNotFound": {
-					"name": "ObjectNotFound",
-					"id": "objectNotFound"
+				"detail": {
+					"id": "detail",
+					"name": "Detail"
 				},
-				"notFound": {
-					"name": "NotFound",
-					"id": "notFound"
+				"stockOverview": {
+					"id": "stockOverview",
+					"name": "Stock"
 				}
 			}
 		}

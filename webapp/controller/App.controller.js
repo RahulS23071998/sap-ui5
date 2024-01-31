@@ -1,34 +1,8 @@
 sap.ui.define([
-	"./BaseController",
-	"sap/ui/model/json/JSONModel"
-], function (BaseController, JSONModel) {
-	"use strict";
+   "sap/ui/core/mvc/Controller"
+], (Controller) => {
+   "use strict";
 
-	return BaseController.extend("mycompany.myapp.MyWorklistApp.controller.App", {
-
-		onInit : function () {
-			var oViewModel,
-				fnSetAppNotBusy,
-				iOriginalBusyDelay = this.getView().getBusyIndicatorDelay();
-
-			oViewModel = new JSONModel({
-				busy : true,
-				delay : 0
-			});
-			this.setModel(oViewModel, "appView");
-
-			fnSetAppNotBusy = function() {
-				oViewModel.setProperty("/busy", false);
-				oViewModel.setProperty("/delay", iOriginalBusyDelay);
-			};
-
-			this.getOwnerComponent().getModel().metadataLoaded().
-				then(fnSetAppNotBusy);
-			this.getOwnerComponent().getModel().attachMetadataFailed(fnSetAppNotBusy);
-
-			this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
-		}
-
-	});
-
+   return Controller.extend("ui5.walkthrough.controller.App", {
+   });
 });

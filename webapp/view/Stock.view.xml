@@ -1,51 +1,90 @@
 <mvc:View
-   xmlns:mvc="sap.ui.core.mvc"
-   xmlns="sap.m"
-   controllerName="mycompany.myapp.MyWorklistApp.controller.Stock">
+        controllerName="ui5.walkthrough.controller.Stock"
+        xmlns="sap.m"
+        xmlns:mvc="sap.ui.core.mvc"
+        displayBlock="true">
 
-   <Page
-      title="Stock List"
-      showNavButton="true"
-      navButtonPress="onNavBack">
+        <Panel headerText="{i18n>stockListTitle}" class="sapUiResponsiveMargin" width="auto">
 
-      <content>
-         <Table
-            id="stockTable"
-            items="{dataModel>/}">
-            <columns>
-               <Column>
-                  <Text text="Product Quantity" />
-               </Column>
-               <Column>
-                  <Text text="Product Code" />
-               </Column>
-               <Column>
-                  <Text text="Location" />
-               </Column>
-               <Column>
-                  <Text text="Zip Code" />
-               </Column>
-            </columns>
-            <items>
-               <ColumnListItem
-                  press="onStockItemPress">
-                  <cells>
-                     <Text text="{dataModel>productQuantity}" />
-                     <Text text="{dataModel>productCode}" />
-                     <Text text="{dataModel>location}" />
-                     <Text text="{dataModel>zipCode}" />
-                  </cells>
-               </ColumnListItem>
-            </items>
-         </Table>
-      </content>
+                <Table id="stockTable" items="{dataModel>/}">
+                        <columns>
+                                <Column>
+                                        <Text text="Product Quantity" />
+                                </Column>
+                                <Column>
+                                        <Text text="Product Code" />
+                                </Column>
+                                <Column>
+                                        <Text text="Location" />
+                                </Column>
+                                <Column>
+                                        <Text text="Zip Code" />
+                                </Column>
+                                <Column>
+                                        <Text text="Actions" />
+                                </Column>
+                        </columns>
+                        <items>
+                                <ColumnListItem>
+                                        <cells>
+                                                <Text text="{dataModel>productQuantity}" />
+                                                <Text text="{dataModel>productCode}" />
+                                                <Text text="{dataModel>location}" />
+                                                <Text text="{dataModel>zipCode}" />
+                                                <HBox>
+                                                        <Button icon="sap-icon://delete" press=".onDeleteRowPress" />
+                                                        <Button icon="sap-icon://edit" press=".onEditRowPress" />
+                                                </HBox>
+                                        </cells>
+                                </ColumnListItem>
+                        </items>
+                </Table>
 
-      <footer>
-         <OverflowToolbar>
-            <ToolbarSpacer />
-            <Button text="Delete" press="onDeleteStock" />
-         </OverflowToolbar>
-      </footer>
+                <Button text="Create Form" press=".onOpenFormPopupPress" />
 
-   </Page>
+                <!-- New data form popup (Create) -->
+                <Dialog id="newDataFormDialog" title="New Data Form" visible="true">
+                        <VBox>
+                                <Label text="Product Quantity" />
+                                <Input value="{newDataModel>/productQuantity}" placeholder="Product Quantity" />
+
+                                <Label text="Product Code" />
+                                <Input value="{newDataModel>/productCode}" placeholder="Product Code" />
+
+                                <Label text="Location" />
+                                <Input value="{newDataModel>/location}" placeholder="Location" />
+
+                                <Label text="Zip Code" />
+                                <Input value="{newDataModel>/zipCode}" placeholder="Zip Code" />
+
+                                <Button text="Submit" press="onSubmitFormPress" />
+                        </VBox>
+                        <beginButton>
+                                <Button text="Close" press="onCloseFormPopupPress" />
+                        </beginButton>
+                </Dialog>
+
+                <!-- Edit data form popup -->
+                <Dialog id="editDataFormDialog" title="Edit Data Form" visible="true">
+                        <VBox>
+                                <Label text="Product Quantity" />
+                                <Input value="{editDataModel>/productQuantity}" placeholder="Product Quantity" />
+
+                                <Label text="Product Code" />
+                                <Input value="{editDataModel>/productCode}" placeholder="Product Code" />
+
+                                <Label text="Location" />
+                                <Input value="{editDataModel>/location}" placeholder="Location" />
+
+                                <Label text="Zip Code" />
+                                <Input value="{editDataModel>/zipCode}" placeholder="Zip Code" />
+
+                                <Button text="Update" press="onUpdateFormPress" />
+                        </VBox>
+                        <beginButton>
+                                <Button text="Close" press="onCloseEditFormPopupPress" />
+                        </beginButton>
+                </Dialog>
+
+        </Panel>
 </mvc:View>

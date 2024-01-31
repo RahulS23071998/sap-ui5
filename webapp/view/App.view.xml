@@ -1,11 +1,12 @@
 <mvc:View
-	controllerName="mycompany.myapp.MyWorklistApp.controller.App"
-	displayBlock="true"
-	xmlns="sap.m"
-	xmlns:mvc="sap.ui.core.mvc">
-	<Shell>
-		<App id="app"
-			busy="{appView>/busy}"
-			busyIndicatorDelay="{appView>/delay}"/>
-	</Shell>
+   controllerName="ui5.walkthrough.controller.App"
+   xmlns="sap.m"
+   xmlns:mvc="sap.ui.core.mvc"
+   displayBlock="true">
+   <Shell>
+    
+      <App
+         class="myAppDergmoWT"
+         id="app" />         
+   </Shell>
 </mvc:View>

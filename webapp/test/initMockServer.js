@@ -1,17 +1,11 @@
 sap.ui.define([
-	"mycompany/myapp/MyWorklistApp/localService/mockserver",
-	"sap/m/MessageBox"
-], function (mockserver, MessageBox) {
+	"../localService/mockserver"
+], (mockserver) => {
 	"use strict";
 
-	var aMockservers = [];
+	// initialize the mock server
+	mockserver.init();
 
-	aMockservers.push(mockserver.init());
-
-	Promise.all(aMockservers).catch(function (oError) {
-		MessageBox.error(oError.message);
-	}).finally(function () {
-		sap.ui.require(["sap/ui/core/ComponentSupport"]);
-	});
-
+	// initialize the embedded component on the HTML page
+	sap.ui.require(["sap/ui/core/ComponentSupport"]);
 });
